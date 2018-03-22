@@ -1,24 +1,37 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SimpleShell {
 
 
-    public static void prettyPrint(String output) {
+
+    public SimpleShell() throws UnirestException {
+    }
+
+
+    public static void prettyPrint(String output) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> map = objectMapper.readValue(output, new TypeReference<Map<String, String>>(){});
+
         // yep, make an effort to format things nicely, eh?
-        System.out.println(output);
+        System.out.println(map.toString());
     }
     public static void main(String[] args) throws java.io.IOException {
 
         YouAreEll webber = new YouAreEll();
         String commandLine;
-        BufferedReader console = new BufferedReader
-                (new InputStreamReader(System.in));
-
+        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+        //ProcessBuilder class used to help create operating system process
         ProcessBuilder pb = new ProcessBuilder();
         List<String> history = new ArrayList<String>();
         int index = 0;
@@ -87,6 +100,9 @@ public class SimpleShell {
                 }
 
                 // wait, wait, what curiousness is this?
+                //Process class is an executing program
+                //Used to perform input, output, waiting for the process to complete,
+                //checking exit status of the pocess and destroying process
                 Process process = pb.start();
 
                 //obtain the input stream
@@ -115,6 +131,18 @@ public class SimpleShell {
              * 4. obtain the output stream
              * 5. output the contents returned by the command
              */
+
+//            ProcessBuilder pb1 = new ProcessBuilder();
+//            pb1.start();
+//            OutputStream outputStream = new OutputStream() {
+//                @Override
+//                public void write(int b) throws IOException {
+//
+//                }
+//            };
+
+
+
 
         }
 
