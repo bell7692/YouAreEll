@@ -1,8 +1,4 @@
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
-import java.sql.Time;
 
 public class Message {
 
@@ -10,9 +6,9 @@ public class Message {
     //final HttpResponse<String> MESSAGES = Unirest.get("http://zipcode.rocks:8085/messages").asString();
 
     private String sequence;
-    private String timeStamp;
-    private String fromId;
-    private String toId;
+    private String timestamp;
+    private String fromid;
+    private String toid;
     private String message;
 
 
@@ -20,17 +16,17 @@ public class Message {
     public Message() throws UnirestException {
     }
 
-    public Message(String sequence, String timeStamp, String fromId, String toId, String message) {
+    public Message(String sequence, String timestamp, String fromId, String toid, String message) {
         this.sequence = sequence;
-        this.timeStamp = timeStamp;
-        this.fromId = fromId;
-        this.toId = toId;
+        this.timestamp = timestamp;
+        this.fromid = fromId;
+        this.toid = toid;
         this.message = message;
     }
 
-    public Message(String fromId, String toId, String message) {
-        this.fromId = fromId;
-        this.toId = toId;
+    public Message(String fromId, String toid, String message) {
+        this.fromid = fromId;
+        this.toid = toid;
         this.message = message;
     }
 
@@ -42,28 +38,28 @@ public class Message {
         this.sequence = sequence;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getFromId() {
-        return fromId;
+    public String getFromid() {
+        return fromid;
     }
 
-    public void setFromId(String fromId) {
-        this.fromId = fromId;
+    public void setFromid(String fromid) {
+        this.fromid = fromid;
     }
 
-    public String getToId() {
-        return toId;
+    public String getToid() {
+        return toid;
     }
 
-    public void setToId(String toId) {
-        this.toId = toId;
+    public void setToid(String toid) {
+        this.toid = toid;
     }
 
     public String getMessage() {
@@ -78,9 +74,9 @@ public class Message {
     public String toString() {
         return "Message{" +
                 "sequence:'" + sequence + '\'' +
-                ", timeStamp:'" + timeStamp + '\'' +
-                ", fromId:'" + fromId + '\'' +
-                ", toId:'" + toId + '\'' +
+                ", timestamp:'" + timestamp + '\'' +
+                ", fromid:'" + fromid + '\'' +
+                ", toid:'" + toid + '\'' +
                 ", message:'" + message + '\'' +
                 '}';
     }

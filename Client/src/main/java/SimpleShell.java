@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SimpleShell {
 
@@ -20,11 +22,8 @@ public class SimpleShell {
 
 
     public static void prettyPrint(String output) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> map = objectMapper.readValue(output, new TypeReference<Map<String, String>>(){});
-
         // yep, make an effort to format things nicely, eh?
-        System.out.println(map.toString());
+        System.out.println(output);
     }
     public static void main(String[] args) throws java.io.IOException {
 
@@ -35,12 +34,20 @@ public class SimpleShell {
         ProcessBuilder pb = new ProcessBuilder();
         List<String> history = new ArrayList<String>();
         int index = 0;
+        //REGEX
+        String post = "\\bPOST\\b.\\w\\w [a-z0-9_-]{3,16}$";
+        Pattern postPattern = Pattern.compile(post);
+        Matcher postMatcher = postPattern.matcher(post);
         //we break out with <ctrl c>
         while (true) {
             //read what the user enters
             System.out.println("cmd? ");
             commandLine = console.readLine();
 
+            if(commandLine.equals("help")){
+                System.out.println("history\t\t\tids\t\t\tmessages\nmessage-log\t\tPOST-id\t\tPOST-message\n");
+                continue;
+            }
             //input parsed into array of strings(command and arguments)
             String[] commands = commandLine.split(" ");
             List<String> list = new ArrayList<String>();
@@ -85,6 +92,32 @@ public class SimpleShell {
                     continue;
                 }
                 // you need to add a bunch more.
+                if(list.contains("message-log")){
+                    String results = webber.messageParse();
+                    SimpleShell.prettyPrint(results);
+                    continue;
+                }
+
+                if (list.contains("POST-id")) {
+                    System.out.println("What is your name?");
+                    String name = console.readLine();;
+                    System.out.println("What is your GitHub User ID?");
+                    String gitID = console.readLine();;
+                    webber.postId(name, gitID);
+                    continue;
+
+                }
+                if(list.contains("POST-message")){
+                    System.out.println("What is your GitHub User Id?");
+                    String fromGitID = console.readLine();;
+                    System.out.println("Who are you sending the message to?");
+                    String toGitID = console.readLine();;
+                    System.out.println("What is your message?");
+                    String message = console.readLine();;
+                    webber.postMessage(fromGitID, toGitID, message);
+                    continue;
+                }
+
 
                 //!! command returns the last command in history
                 if (list.get(list.size() - 1).equals("!!")) {

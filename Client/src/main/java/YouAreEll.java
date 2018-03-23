@@ -1,9 +1,13 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
+
+import java.io.IOException;
+import java.util.List;
 
 public class YouAreEll {
 
@@ -12,13 +16,14 @@ public class YouAreEll {
 
 
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) throws IOException {
         YouAreEll urlhandler = new YouAreEll();
      //   System.out.println(urlhandler.MakeURLCall("/ids", "GET", ""));
-     //   System.out.println(urlhandler.MakeURLCall("/messages", "GET", ""));
+      //  System.out.println(urlhandler.MakeURLCall("/messages", "GET", ""));
      //   urlhandler.postId("Bo", "bell7692");
      //   urlhandler.postMessage("bell7692", "kfennimore", "The best is yet to come");
-        urlhandler.get_messages();
+     // urlhandler.get_messages();
+        urlhandler.messageParse();
 
 
     }
@@ -30,20 +35,34 @@ public class YouAreEll {
 
     }
 
-    public void postMessage(String fromId, String toId, String message) throws JsonProcessingException {
+    public void postMessage(String fromid, String toid, String message) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Message myMessage = new Message(fromId, toId, message);
+        Message myMessage = new Message(fromid, toid, message);
         String payload = objectMapper.writeValueAsString(myMessage);
-        String url = "/ids/" +toId +"/messages";
+        String url = "/ids/" +toid +"/messages";
         MakeURLCall(url, "POST", payload);
     }
     public String get_ids() {
         return MakeURLCall("/ids", "GET", "");
     }
 
-//    public String get_20_messages(){
-//
-//    }
+
+    public String messageParse() throws IOException {
+        String str = MakeURLCall("/messages", "GET", "");
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Message> message = objectMapper.readValue(str, new TypeReference<List<Message>>(){});
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < message.size(); i++) {
+            sb.append("Time: " +message.get(i).getTimestamp() + "\n");
+            sb.append("From: " +message.get(i).getFromid() + "\n");
+            sb.append("To: " +message.get(i).getToid() + "\n");
+            sb.append("Message: " +message.get(i).getMessage() + "\n\n");
+        }
+        System.out.println(sb.toString());
+        return sb.toString();
+
+    }
     public String get_messages() {
         return MakeURLCall("/messages", "GET", "");
     }
